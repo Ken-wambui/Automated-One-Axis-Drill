@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<SimscapeMultibodyImportXML version="2.0" xmlns="urn:mathworks:SimscapeMultibody:import" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Created by="" on="06/17/23||12:30:40" using="Simscape Multibody Link Version 7.0" from="SolidWorks 31.0.1"/>
+<ModelUnits mass="kilogram" length="millimeter"/>
+<DataUnits mass="kilogram" length="meter"/>
+<RootAssembly name="Dc motor for simulink assembly 2.0" uid="Dc motor for simulink assembly 2.0" version="112">
+<AssemblyFile name="Dc motor for simulink assembly 2.0.SLDASM" type="SolidWorks Assembly"/>
+<InstanceTree>
+<Instance name="second part-1" uid="second part-1" entityUid="second part*:*Default">
+<Transform>
+<Rotation>-0.044127188107793702 0.99902592122011491 -4.9888139743388702e-16 -0.99902592122011491 -0.044127188107793702 -2.8293546267806114e-16 -3.0467409451583359e-16 4.8591030126700684e-16 0.99999999999999978</Rotation>
+<Translation>-0.0053026067181962452 -0.0051153891915014238 0.0064232455909252117</Translation>
+</Transform>
+</Instance>
+<Instance name="cassing-1" uid="cassing-1" grounded="true" entityUid="cassing*:*Default">
+<Transform>
+<Rotation>1 0 0 0 1 0 0 0 1</Rotation>
+<Translation>-0.0011848930306541669 0.00041033938970633536 -0.0060910266221731041</Translation>
+</Transform>
+</Instance>
+</InstanceTree>
+<Constraints>
+<Coincident name="Coincident1">
+<ConstraintGeometry geomType="line">
+<InstancePath>
+<Uid>cassing-1</Uid>
+</InstancePath>
+<Position>-0.001387945239798672 -0.0014588387315948958 -0.0027631926524309611</Position>
+<Axis>0 0 -0.99999999999999989</Axis>
+</ConstraintGeometry>
+<ConstraintGeometry geomType="line">
+<InstancePath>
+<Uid>second part-1</Uid>
+</InstancePath>
+<Position>-0.0041833853842945246 0.002547649024816924 0.019209241074919448</Position>
+<Axis>0 0 -0.99999999999999978</Axis>
+</ConstraintGeometry>
+</Coincident>
+<Distance name="Distance1">
+<ConstraintGeometry geomType="plane">
+<InstancePath>
+<Uid>second part-1</Uid>
+</InstancePath>
+<Position>-0.0056333853842945219 0.002547649024816924 -0.011790758925080528</Position>
+<Axis>0 0 -0.99999999999999978</Axis>
+</ConstraintGeometry>
+<ConstraintGeometry geomType="plane">
+<InstancePath>
+<Uid>cassing-1</Uid>
+</InstancePath>
+<Position>-0.0013879452397986864 -0.0014588387315948954 -0.0012764867119822096</Position>
+<Axis>0 0 1</Axis>
+</ConstraintGeometry>
+</Distance>
+</Constraints>
+</RootAssembly>
+<Assemblies>
+</Assemblies>
+<Parts>
+<Part name="cassing" uid="cassing*:*Default" version="113">
+<ModelUnits mass="kilogram" length="millimeter"/>
+<PartFile name="cassing.SLDPRT" type="SolidWorks Part"/>
+<MassProperties>
+<Mass>0.00255344368952101</Mass>
+<CenterOfMass>-0.0013879399813147154 -0.001391943687335337 0.0061253266906804221</CenterOfMass>
+<Inertia>1.7673484197337896e-07 2.3272268583108028e-07 1.5696512488984861e-07 -1.2551355057043505e-09 -1.15109255681264e-13 -1.453999470136739e-10</Inertia>
+</MassProperties>
+<GeometryFile name="cassing_Default_sldprt.STEP" type="STEP"/>
+<VisualProperties>
+<Ambient r="0.792156862745098" g="0.81960784313725488" b="0.93333333333333335" a="1"/>
+<Diffuse r="0.792156862745098" g="0.81960784313725488" b="0.93333333333333335" a="1"/>
+<Specular r="0.396078431372549" g="0.40980392156862744" b="0.46666666666666667" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.3125</Shininess>
+</VisualProperties>
+</Part>
+<Part name="second part" uid="second part*:*Default" version="111">
+<ModelUnits mass="kilogram" length="millimeter"/>
+<PartFile name="second part.SLDPRT" type="SolidWorks Part"/>
+<MassProperties>
+<Mass>0.0013615724623386241</Mass>
+<CenterOfMass>-0.0041833852531766658 0.0025476509343654264 0.006496178260493945</CenterOfMass>
+<Inertia>1.4494507054970415e-07 1.4494506716799865e-07 2.1743497847125973e-08 2.4862817349286567e-14 7.8178337402471533e-16 -8.9335686376337786e-16</Inertia>
+</MassProperties>
+<GeometryFile name="second part_Default_sldprt.STEP" type="STEP"/>
+<VisualProperties>
+<Ambient r="0.792156862745098" g="0.81960784313725488" b="0.93333333333333335" a="1"/>
+<Diffuse r="0.792156862745098" g="0.81960784313725488" b="0.93333333333333335" a="1"/>
+<Specular r="0.396078431372549" g="0.40980392156862744" b="0.46666666666666667" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.3125</Shininess>
+</VisualProperties>
+</Part>
+</Parts>
+</SimscapeMultibodyImportXML>

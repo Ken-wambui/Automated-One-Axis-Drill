@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<SimscapeMultibodyImportXML version="2.0" xmlns="urn:mathworks:SimscapeMultibody:import" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<Created by="" on="06/27/23||16:48:36" using="Simscape Multibody Link Version 7.0" from="SolidWorks 31.0.1"/>
+<ModelUnits mass="kilogram" length="millimeter"/>
+<DataUnits mass="kilogram" length="meter"/>
+<RootAssembly name="sim assembley of stepper" uid="sim assembley of stepper" version="107">
+<AssemblyFile name="sim assembley of stepper.SLDASM" type="SolidWorks Assembly"/>
+<InstanceTree>
+<Instance name="rotary part-1" uid="rotary part-1" entityUid="rotary part*:*Default">
+<Transform>
+<Rotation>-0.99930447387040477 -0.037290327198802639 1.5019283858791208e-15 0.037290327198802639 -0.99930447387040477 3.3643347218174676e-15 1.3754266128590958e-15 3.4180021400483409e-15 1</Rotation>
+<Translation>0.0037362401412154634 0.04083838164500668 0.11472295121383949</Translation>
+</Transform>
+</Instance>
+<Instance name="case-1" uid="case-1" grounded="true" entityUid="case*:*Default">
+<Transform>
+<Rotation>1 0 0 0 1 0 0 0 1</Rotation>
+<Translation>-0.041659920055110433 -0.0065504397894642248 0.009433644135238315</Translation>
+</Transform>
+</Instance>
+</InstanceTree>
+<Constraints>
+<Coincident name="Coincident1">
+<ConstraintGeometry geomType="line">
+<InstancePath>
+<Uid>case-1</Uid>
+</InstancePath>
+<Position>0.040248696225376517 0.027180290951150259 0.002183389831069733</Position>
+<Axis>0 0 -1</Axis>
+</ConstraintGeometry>
+<ConstraintGeometry geomType="line">
+<InstancePath>
+<Uid>rotary part-1</Uid>
+</InstancePath>
+<Position>0.0043903010613263131 0.020386425538049226 -0.08324388405865811</Position>
+<Axis>-7.1958899744223212e-16 -1.6961740653995456e-15 -1</Axis>
+</ConstraintGeometry>
+</Coincident>
+<Coincident name="Coincident2">
+<ConstraintGeometry geomType="plane">
+<InstancePath>
+<Uid>case-1</Uid>
+</InstancePath>
+<Position>0.039992454155924687 0.030570621318804572 -0.045704576980056824</Position>
+<Axis>0 0 -1</Axis>
+</ConstraintGeometry>
+<ConstraintGeometry geomType="plane">
+<InstancePath>
+<Uid>rotary part-1</Uid>
+</InstancePath>
+<Position>0.0043903010613262645 0.020386425538049108 -0.1509938840586581</Position>
+<Axis>-7.1676587551240299e-16 -1.7048899784205525e-15 -1</Axis>
+</ConstraintGeometry>
+</Coincident>
+</Constraints>
+</RootAssembly>
+<Assemblies>
+</Assemblies>
+<Parts>
+<Part name="case" uid="case*:*Default" version="113">
+<ModelUnits mass="kilogram" length="millimeter"/>
+<PartFile name="case.SLDPRT" type="SolidWorks Part"/>
+<MassProperties>
+<Mass>0.051138622926240024</Mass>
+<CenterOfMass>0.040248696225376086 0.027180290951150696 -0.023383084717923892</CenterOfMass>
+<Inertia>1.9813889544287316e-05 1.9813889544287316e-05 1.7302447706118141e-05 0 0 0</Inertia>
+</MassProperties>
+<GeometryFile name="case_Default_sldprt.STEP" type="STEP"/>
+<VisualProperties>
+<Ambient r="0.792156862745098" g="0.81960784313725488" b="0.93333333333333335" a="1"/>
+<Diffuse r="0.792156862745098" g="0.81960784313725488" b="0.93333333333333335" a="1"/>
+<Specular r="0.396078431372549" g="0.40980392156862744" b="0.46666666666666667" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.3125</Shininess>
+</VisualProperties>
+</Part>
+<Part name="rotary part" uid="rotary part*:*Default" version="108">
+<ModelUnits mass="kilogram" length="millimeter"/>
+<PartFile name="rotary part.SLDPRT" type="SolidWorks Part"/>
+<MassProperties>
+<Mass>0.043550587519834712</Mass>
+<CenterOfMass>0.0043939447158388469 0.020384190559463042 0.0026406107630413816</CenterOfMass>
+<Inertia>0.00019600983249900967 0.00019601105922540703 1.3604921075733814e-06 -2.4540710231691283e-09 1.6406179648636181e-08 6.7302009152686582e-10</Inertia>
+</MassProperties>
+<GeometryFile name="rotary part_Default_sldprt.STEP" type="STEP"/>
+<VisualProperties>
+<Ambient r="0.792156862745098" g="0.81960784313725488" b="0.93333333333333335" a="1"/>
+<Diffuse r="0.792156862745098" g="0.81960784313725488" b="0.93333333333333335" a="1"/>
+<Specular r="0.396078431372549" g="0.40980392156862744" b="0.46666666666666667" a="1"/>
+<Emissive r="0" g="0" b="0" a="1"/>
+<Shininess>0.3125</Shininess>
+</VisualProperties>
+</Part>
+</Parts>
+</SimscapeMultibodyImportXML>
