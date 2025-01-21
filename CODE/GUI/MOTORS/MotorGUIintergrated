@@ -1,0 +1,216 @@
+import tkinter as tk
+from tkinter import ttk
+import serial
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import threading
+import numpy as np
+from matplotlib.figure import Figure
+import csv
+import customtkinter as ctk
+import ctypes
+
+# Variables
+is_plotting = False
+max_data_points = 50
+data_counter = 0  # Counter for unique data files
+csv_data = []  # List to hold the data
+pulses = np.array([])
+current_position = 0  # Track stepper motor position
+
+# Lock for synchronizing access to shared data
+data_lock = threading.Lock()
+
+# Check for dark mode
+def is_dark_mode_enabled():
+    try:
+        return ctypes.windll.uxtheme.IsThemeActive() == 1
+    except Exception as e:
+        print(f"Theme detection error: {e}")
+        return False
+
+dark_mode = is_dark_mode_enabled()
+
+def toggle_dark_mode():
+    global dark_mode
+    dark_mode = not dark_mode
+    update_theme()
+
+def update_theme():
+    theme = "dark" if dark_mode else "light"
+    root.configure(bg='black' if dark_mode else 'red')  # Changed background to red
+    ctk.set_appearance_mode(theme)
+    print(f"Switching to {theme} mode")
+    switch_1.configure(text='Light Mode' if dark_mode else 'Dark Mode')
+    canvas3.get_tk_widget().configure(bg='black' if dark_mode else 'white')
+
+def start_plotting():
+    global is_plotting
+    is_plotting = True
+    threading.Thread(target=update_plot, daemon=True).start()
+    ser.reset_input_buffer()
+
+def stop_plotting():
+    global is_plotting
+    is_plotting = False
+
+def update_plot():
+    global is_plotting, pulses, csv_data, data_counter, current_position
+    while is_plotting:
+        try:
+            data = ser.readline().decode('utf-8').strip()
+            if data.startswith("CURRENT SPEED:"):
+                pwm = int(data.split(":")[1])
+            elif data.startswith("CURRENT POSITION:"):
+                current_position = int(data.split(":")[1])
+            else:
+                continue  # Skip if data doesn't match expected format
+
+            with data_lock:
+                if len(pulses) < max_data_points:
+                    pulses = np.append(pulses, pwm)
+                else:
+                    pulses[:-1] = pulses[1:]
+                    pulses[-1] = pwm
+
+            pwm_label.configure(text=f'PWM: {pwm}')
+            position_label.configure(text=f'Position: {current_position}')
+            csv_data.append([pwm])
+
+            if len(csv_data) >= max_data_points:
+                save_data_to_csv(data_counter)
+                data_counter += 1
+                csv_data = []
+
+            root.after(10, update_plot3)
+        except Exception as e:
+            print(f"Data read error: {e}")
+
+def save_data_to_csv(counter):
+    filename = f'datapwm{counter}.csv'
+    try:
+        with open(filename, 'w', newline='') as csvfile:
+            csvwriter = csv.writer(csvfile)
+            csvwriter.writerow(['PWM'])
+            csvwriter.writerows(csv_data)
+    except IOError as e:
+        print(f"File write error: {e}")
+
+def update_plot3():
+    with data_lock:
+        lines3.set_xdata(np.arange(len(pulses)))
+        lines3.set_ydata(pulses)
+    canvas3.draw()
+
+def send_command(command):
+    if ser.is_open:
+        ser.write(f"{command}\n".encode('utf-8'))
+        print(f"Sent command: {command}")
+
+def update_serial_connection():
+    selected_com_port = com_port_combo.get()
+    selected_baud_rate = baud_rate_combo.get()
+    global ser
+    try:
+        if ser.is_open:
+            ser.close()
+        ser = serial.Serial(selected_com_port, int(selected_baud_rate))
+        ser.reset_input_buffer()
+        print(f"Connected to {selected_com_port} at {selected_baud_rate} baud")
+    except serial.SerialException as e:
+        print(f"Serial connection error: {e}")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+# Initialize tkinter window
+root = ctk.CTk()
+root.title("MOTOR CONTROL GUI: ONE AXIS AUTOMATED DRILL")
+root.configure(bg='red')  # Changed background to red
+ser = serial.Serial()
+
+# GUI Layout
+combined_halves = ctk.CTkFrame(root)
+combined_halves.pack(fill="both", expand=True, padx=10, pady=10)
+
+left_half = ctk.CTkFrame(combined_halves)
+left_half.pack(side="left", padx=5, pady=5, fill="y")
+
+right_half = ctk.CTkFrame(combined_halves)
+right_half.pack(side="right", padx=5, pady=5, fill="both", expand=True)
+
+# Left Half - Serial Connection Controls
+com_ports = [f"COM{i}" for i in range(1, 21)]
+baud_rates = ["9600", "115200", "57600", "38400"]
+com_port_combo = ttk.Combobox(left_half, values=com_ports)
+baud_rate_combo = ttk.Combobox(left_half, values=baud_rates)
+com_port_combo.set("COM1")
+baud_rate_combo.set("9600")
+update_button = ctk.CTkButton(left_half, text="Update Serial Connection", command=update_serial_connection)
+
+# Stop Machine Button - Placed above COM selection with bold and red background
+stop_machine_button = ctk.CTkButton(left_half, text="STOP MACHINE", font=("Arial", 12, "bold"), fg_color="red", hover_color="darkred", command=lambda: send_command("stopmachine"))
+stop_machine_button.pack(pady=5)
+
+# Serial Connection Controls
+com_port_combo.pack(pady=5)
+baud_rate_combo.pack(pady=5)
+update_button.pack(pady=5)
+
+# Drill Speed Controls
+drill_controls = ctk.CTkFrame(left_half)
+drill_controls.pack(pady=5)
+
+drill_label = ctk.CTkLabel(drill_controls, text="DRILL SPEED", font=("Arial", 12))
+drill_label.pack(pady=5)
+
+fast_drill_button = ctk.CTkButton(drill_controls, text="Fast Drill", command=lambda: send_command("fastdrill"))
+slow_drill_button = ctk.CTkButton(drill_controls, text="Slow Drill", command=lambda: send_command("slowdrill"))
+fast_drill_button.pack(pady=5)
+slow_drill_button.pack(pady=5)
+
+# Feed Rate Controls
+feed_controls = ctk.CTkFrame(left_half)
+feed_controls.pack(pady=5)
+
+feed_label = ctk.CTkLabel(feed_controls, text="FEED RATE", font=("Arial", 12))
+feed_label.pack(pady=5)
+
+fast_feed_button = ctk.CTkButton(feed_controls, text="High Feed Rate", command=lambda: send_command("highFeedRate"))
+slow_feed_button = ctk.CTkButton(feed_controls, text="Slow Feed Rate", command=lambda: send_command("slowFeedRate"))
+fast_feed_button.pack(pady=5)
+slow_feed_button.pack(pady=5)
+
+# Right Half - Plot and Controls
+group_r_1 = ctk.CTkFrame(right_half)
+group_r_1.pack(fill="x", pady=10)
+
+switch_1 = ctk.CTkSwitch(group_r_1, text='Light Mode' if dark_mode else 'Dark Mode', command=toggle_dark_mode)
+start_button = ctk.CTkButton(group_r_1, text="Start Plot", command=start_plotting)
+stop_button = ctk.CTkButton(group_r_1, text="Stop Plot", command=stop_plotting)
+
+switch_1.pack(side="top", pady=5)
+start_button.pack(side="left", padx=5, pady=5)
+stop_button.pack(side="right", padx=5, pady=5)
+
+fig3 = Figure(figsize=(6, 4))
+ax3 = fig3.add_subplot(111)
+ax3.set_title("PWM") 
+ax3.set_ylabel("PWM Value")
+ax3.grid(True)
+ax3.set_xlim([0, max_data_points])
+ax3.set_ylim([0, 260])
+lines3, = ax3.plot([], [])
+canvas3 = FigureCanvasTkAgg(fig3, master=right_half)
+canvas3.draw()
+canvas3.get_tk_widget().pack(pady=10, fill="both", expand=True)
+
+# PWM and Position Labels
+pwm_label = ctk.CTkLabel(right_half, text="PWM: 0", font=("Arial", 14))
+pwm_label.pack(pady=5)
+position_label = ctk.CTkLabel(right_half, text="Position: 0", font=("Arial", 14))
+position_label.pack(pady=5)
+
+# Start data thread
+data_thread = threading.Thread(target=update_plot, daemon=True)
+data_thread.start()
+
+root.mainloop()
